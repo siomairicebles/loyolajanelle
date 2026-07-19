@@ -1,0 +1,1149 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Personal portfolio of an IT student at Davao del Norte State College (DNSC), showcasing class projects and a growing interest in Computer Vision." />
+  <title>IT Student | DNSC — Personal Portfolio</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
+
+  <!-- GSAP -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* ================================================================
+       TOKENS — DARK THEME
+    ================================================================ */
+    :root {
+      --bg:         #0d1117;
+      --bg-card:    #161d2e;
+      --bg-card-2:  #1c2438;
+      --bg-input:   #1a2234;
+      --border:     rgba(255,255,255,0.08);
+      --border-card:rgba(255,255,255,0.1);
+
+      --text:       #e2e8f0;
+      --text-sub:   #94a3b8;
+      --text-muted: #64748b;
+
+      --blue:       #3b82f6;
+      --blue-lt:    #60a5fa;
+      --teal:       #06b6d4;
+      --teal-lt:    #22d3ee;
+
+      --grad-name:  linear-gradient(90deg, #3b82f6 0%, #06b6d4 100%);
+      --grad-btn:   linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+      --grad-badge: linear-gradient(135deg, rgba(59,130,246,0.25) 0%, rgba(6,182,212,0.15) 100%);
+
+      --nav-h: 68px;
+      --radius: 12px;
+      --font: 'Inter', system-ui, sans-serif;
+
+      /* Light theme overrides applied via JS toggle */
+    }
+
+    [data-theme="light"] {
+      --bg:         #f1f5f9;
+      --bg-card:    #ffffff;
+      --bg-card-2:  #f8fafc;
+      --bg-input:   #f1f5f9;
+      --border:     rgba(0,0,0,0.07);
+      --border-card:rgba(0,0,0,0.09);
+      --text:       #0f172a;
+      --text-sub:   #475569;
+      --text-muted: #94a3b8;
+    }
+
+    /* ================================================================
+       RESET & BASE
+    ================================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background 0.3s, color 0.3s;
+    }
+    img  { display: block; max-width: 100%; }
+    a    { text-decoration: none; color: inherit; }
+    ul   { list-style: none; }
+    button { cursor: pointer; border: none; background: none; font-family: inherit; }
+    ::selection { background: rgba(59,130,246,0.3); color: var(--text); }
+
+    /* ================================================================
+       SCROLLBAR
+    ================================================================ */
+    ::-webkit-scrollbar { width: 5px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: var(--bg-card-2); border-radius: 3px; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--blue); }
+
+    /* ================================================================
+       LAYOUT HELPERS
+    ================================================================ */
+    .wrap {
+      width: 100%;
+      max-width: 960px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 2.5rem);
+    }
+
+    /* ================================================================
+       NAVBAR
+    ================================================================ */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: var(--nav-h);
+      background: var(--bg);
+      border-bottom: 1px solid var(--border);
+      z-index: 900;
+      display: flex;
+      align-items: center;
+      transition: background 0.3s;
+    }
+
+    .nav__inner {
+      width: 100%;
+      max-width: 960px;
+      margin-inline: auto;
+      padding-inline: clamp(1.25rem, 5vw, 2.5rem);
+      display: flex;
+      align-items: center;
+    }
+
+    .nav__brand {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      display: flex;
+      align-items: center;
+      gap: 0.25rem;
+      flex-shrink: 0;
+    }
+
+    .nav__brand-code {
+      color: var(--blue);
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .nav__links {
+      display: flex;
+      align-items: center;
+      gap: 1.75rem;
+      margin-inline: auto;
+    }
+
+    .nav__links a {
+      font-size: 0.875rem;
+      font-weight: 500;
+      color: var(--text-sub);
+      transition: color 0.2s;
+      position: relative;
+    }
+
+    .nav__links a:hover,
+    .nav__links a.active { color: var(--blue); }
+
+    .nav__theme {
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-sub);
+      font-size: 1rem;
+      flex-shrink: 0;
+      transition: background 0.2s, color 0.2s;
+    }
+
+    .nav__theme:hover { background: var(--bg-card-2); color: var(--text); }
+
+    .nav__hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      padding: 6px;
+      margin-left: 0.5rem;
+    }
+    .nav__hamburger span {
+      display: block;
+      width: 20px; height: 2px;
+      background: var(--text);
+      border-radius: 2px;
+    }
+
+    /* Mobile overlay */
+    .nav__mobile {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      z-index: 899;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 2.5rem;
+    }
+    .nav__mobile.open { display: flex; }
+    .nav__mobile a {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: var(--text);
+      transition: color 0.2s;
+    }
+    .nav__mobile a:hover { color: var(--blue); }
+    .nav__mobile-close {
+      position: absolute;
+      top: 1.5rem; right: 1.5rem;
+      font-size: 1.5rem;
+      color: var(--text-muted);
+      cursor: pointer;
+    }
+
+    /* ================================================================
+       HERO
+    ================================================================ */
+    #home {
+      min-height: 100svh;
+      display: flex;
+      align-items: center;
+      padding-top: var(--nav-h);
+    }
+
+    .hero__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: clamp(1.5rem, 4vw, 3rem);
+      padding-block: clamp(2rem, 4vh, 3rem);
+    }
+
+    .hero__content { flex: 1; }
+
+    /* "WELCOME TO MY SPACE" badge */
+    .hero__badge {
+      display: inline-block;
+      padding: 0.35rem 1rem;
+      background: var(--grad-badge);
+      border: 1px solid rgba(59,130,246,0.35);
+      border-radius: 999px;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--blue-lt);
+      margin-bottom: 1.5rem;
+    }
+
+    .hero__greeting {
+      font-size: clamp(2.2rem, 6vw, 3.5rem);
+      font-weight: 800;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
+      color: var(--text);
+      margin-bottom: 1.25rem;
+    }
+
+    .hero__greeting .name {
+      background: var(--grad-name);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+
+    .hero__sub {
+      font-size: 1rem;
+      color: var(--text-sub);
+      line-height: 1.7;
+      max-width: 440px;
+      margin-bottom: 2.25rem;
+    }
+
+    .hero__btns {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.875rem;
+    }
+
+    .btn-blue {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.72rem 1.5rem;
+      background: var(--blue);
+      color: #fff;
+      font-size: 0.9rem;
+      font-weight: 600;
+      border-radius: 8px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-blue:hover { background: var(--blue-lt); transform: translateY(-1px); }
+
+    .btn-dark {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.72rem 1.5rem;
+      background: var(--bg-card);
+      color: var(--text);
+      font-size: 0.9rem;
+      font-weight: 600;
+      border: 1px solid var(--border-card);
+      border-radius: 8px;
+      transition: background 0.2s, border-color 0.2s, transform 0.15s;
+    }
+    .btn-dark:hover { background: var(--bg-card-2); border-color: rgba(255,255,255,0.2); transform: translateY(-1px); }
+
+    /* Profile photo */
+    .hero__photo {
+      position: relative;
+      flex-shrink: 0;
+    }
+
+    .hero__photo-ring {
+      width: clamp(200px, 28vw, 280px);
+      height: clamp(200px, 28vw, 280px);
+      border-radius: 50%;
+      background: var(--grad-btn);
+      padding: 3px;
+      box-shadow:
+        0 0 30px rgba(59,130,246,0.35),
+        0 0 70px rgba(6,182,212,0.2);
+      animation: ringGlow 4s ease-in-out infinite alternate;
+    }
+
+    @keyframes ringGlow {
+      from { box-shadow: 0 0 30px rgba(59,130,246,0.35), 0 0 70px rgba(6,182,212,0.2); }
+      to   { box-shadow: 0 0 50px rgba(59,130,246,0.55), 0 0 100px rgba(6,182,212,0.35); }
+    }
+
+    .hero__photo-inner {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      background: var(--bg-card);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .hero__photo-inner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top center;
+    }
+
+    /* ================================================================
+       SECTION TITLE STYLE
+    ================================================================ */
+    .sec-title {
+      font-size: clamp(1.6rem, 4vw, 2rem);
+      font-weight: 800;
+      color: var(--text);
+      letter-spacing: -0.02em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .sec-title::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border-card);
+    }
+
+    /* ================================================================
+       ABOUT SECTION
+    ================================================================ */
+    #about { padding-block: clamp(2.5rem, 5vw, 4rem); }
+
+    .about__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 1.5rem;
+    }
+
+    .about__block {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+      padding: 1.25rem;
+    }
+
+    .about__block-title {
+      font-size: 0.7rem;
+      font-weight: 700;
+      letter-spacing: 0.15em;
+      text-transform: uppercase;
+      color: var(--blue);
+      margin-bottom: 0.875rem;
+    }
+
+    .about__block p {
+      font-size: 0.9rem;
+      color: var(--text-sub);
+      line-height: 1.75;
+    }
+
+    .about__skills-list {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.25rem;
+    }
+
+    .about__skills-list li {
+      font-size: 0.875rem;
+      color: var(--text-sub);
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+    }
+
+    .about__skills-list li::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .about__tech-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.25rem;
+    }
+
+    .tech-tag {
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.3rem 0.75rem;
+      background: var(--bg-card-2);
+      border: 1px solid var(--border-card);
+      border-radius: 999px;
+      color: var(--text-sub);
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .tech-tag:hover { border-color: var(--blue); color: var(--blue); }
+    .tech-tag.primary { border-color: var(--blue); color: var(--blue); }
+
+    /* ================================================================
+       PROJECTS SECTION
+    ================================================================ */
+    #projects { padding-block: clamp(2.5rem, 5vw, 4rem); }
+
+    .projects__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .proj-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+      padding: 1.125rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+      position: relative;
+    }
+
+    .proj-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(59,130,246,0.12);
+      border-color: rgba(59,130,246,0.3);
+    }
+
+    .proj-card__header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 0.5rem;
+    }
+
+    .proj-card__title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.35;
+    }
+
+    .proj-card__folder {
+      color: var(--blue);
+      flex-shrink: 0;
+      opacity: 0.75;
+    }
+
+    .proj-card__desc {
+      font-size: 0.855rem;
+      color: var(--text-sub);
+      line-height: 1.65;
+      flex: 1;
+    }
+
+    .proj-card__footer {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .proj-lang {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+      font-size: 0.78rem;
+      color: var(--text-sub);
+    }
+
+    .proj-lang__dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+    .dot-python { background: #3572a5; }
+    .dot-js     { background: #f1e05a; }
+    .dot-react  { background: #61dafb; }
+    .dot-multi  { background: linear-gradient(135deg, #3572a5, #61dafb); }
+
+    .proj-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--blue);
+      transition: color 0.2s;
+    }
+    .proj-link:hover { color: var(--teal); }
+
+    /* Tag badge on card */
+    .proj-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 0.2rem 0.6rem;
+      border-radius: 4px;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      background: rgba(59,130,246,0.15);
+      color: var(--blue-lt);
+      margin-bottom: 0.25rem;
+    }
+
+    /* ================================================================
+       CERTIFICATES SECTION
+    ================================================================ */
+    #certificates { padding-block: clamp(2.5rem, 5vw, 4rem); }
+
+    .certs__grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(270px, 1fr));
+      gap: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .cert-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    }
+
+    .cert-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 40px rgba(59,130,246,0.1);
+      border-color: rgba(59,130,246,0.25);
+    }
+
+    .cert-card__img {
+      width: 100%;
+      height: 185px;
+      background: var(--bg-card-2);
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .cert-card__img img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    /* Placeholder for cert images */
+    .cert-card__placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 1.5rem;
+      background: var(--bg-card-2);
+    }
+
+    .cert-card__placeholder-icon {
+      width: 56px; height: 56px;
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+    }
+
+    .cert-card__placeholder-text {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      text-align: center;
+      letter-spacing: 0.06em;
+    }
+
+    .cert-card__body {
+      padding: 1.25rem;
+    }
+
+    .cert-card__title {
+      font-size: 1rem;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 0.35rem;
+      line-height: 1.35;
+    }
+
+    .cert-card__issuer {
+      font-size: 0.855rem;
+      color: var(--text-sub);
+      margin-bottom: 0.35rem;
+    }
+
+    .cert-card__date {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      font-style: italic;
+    }
+
+    /* ================================================================
+       CONTACT SECTION
+    ================================================================ */
+    #contact { padding-block: clamp(2.5rem, 5vw, 4rem); }
+
+    .contact__grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0.875rem;
+      margin-top: 1.5rem;
+    }
+
+    .contact__card {
+      background: var(--bg-card);
+      border: 1px solid var(--border-card);
+      border-radius: var(--radius);
+      padding: 1.125rem 1.375rem;
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      transition: transform 0.2s, border-color 0.2s, box-shadow 0.2s;
+      text-decoration: none;
+      color: inherit;
+    }
+
+    .contact__card:hover {
+      transform: translateY(-3px);
+      border-color: rgba(59,130,246,0.35);
+      box-shadow: 0 8px 30px rgba(59,130,246,0.1);
+    }
+
+    .contact__card-icon {
+      width: 44px; height: 44px;
+      background: rgba(59,130,246,0.12);
+      border: 1px solid rgba(59,130,246,0.25);
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--blue);
+      flex-shrink: 0;
+    }
+
+    .contact__card-info { }
+
+    .contact__card-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.2rem;
+    }
+
+    .contact__card-value {
+      font-size: 0.95rem;
+      font-weight: 600;
+      color: var(--text);
+    }
+
+    /* LinkedIn card — teal accent */
+    .contact__card--li .contact__card-icon {
+      background: rgba(10,102,194,0.12);
+      border-color: rgba(10,102,194,0.25);
+      color: #0a66c2;
+    }
+
+    /* Email card — teal accent */
+    .contact__card--mail .contact__card-icon {
+      background: rgba(6,182,212,0.12);
+      border-color: rgba(6,182,212,0.25);
+      color: var(--teal);
+    }
+
+    /* ================================================================
+       FOOTER
+    ================================================================ */
+    footer {
+      padding-block: 1.5rem;
+      border-top: 1px solid var(--border);
+    }
+
+    .footer__inner {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+    }
+
+    .footer__copy {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .footer__back {
+      font-size: 0.8rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      transition: color 0.2s;
+    }
+    .footer__back:hover { color: var(--blue); }
+
+    /* ================================================================
+       GSAP REVEAL STATES
+    ================================================================ */
+    .gs-up    { opacity: 0; transform: translateY(24px); }
+    .gs-left  { opacity: 0; transform: translateX(-24px); }
+    .gs-right { opacity: 0; transform: translateX(24px); }
+
+    /* ================================================================
+       RESPONSIVE
+    ================================================================ */
+    @media (max-width: 768px) {
+      .hero__inner    { flex-direction: column-reverse; align-items: center; text-align: center; }
+      .hero__sub      { margin-inline: auto; }
+      .hero__btns     { justify-content: center; }
+      .about__grid    { grid-template-columns: 1fr; }
+      .projects__grid { grid-template-columns: 1fr; }
+      .certs__grid    { grid-template-columns: 1fr; }
+      .contact__grid  { grid-template-columns: 1fr; }
+      .nav__links, .nav__theme { display: none; }
+      .nav__hamburger { display: flex; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ================================================================
+       NAVBAR
+  ================================================================ -->
+  <nav class="nav" id="navbar">
+    <div class="nav__inner">
+      <!-- Brand -->
+      <a href="#home" class="nav__brand">
+        <span class="nav__brand-code">&lt;/&gt;</span>
+        &nbsp;Loyola Janelle Liagoso
+      </a>
+
+      <!-- Links -->
+      <ul class="nav__links">
+        <li><a href="#home"         class="active" id="nl-home">Home</a></li>
+        <li><a href="#about"        id="nl-about">About</a></li>
+        <li><a href="#projects"     id="nl-projects">Projects</a></li>
+        <li><a href="#certificates" id="nl-certs">Certificates</a></li>
+        <li><a href="#contact"      id="nl-contact">Contact</a></li>
+      </ul>
+
+      <!-- Theme toggle -->
+      <button class="nav__theme" id="themeToggle" aria-label="Toggle light/dark mode">
+        ☀️
+      </button>
+
+      <!-- Hamburger -->
+      <button class="nav__hamburger" id="navHamburger" aria-label="Open menu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </nav>
+
+  <!-- Mobile overlay -->
+  <div class="nav__mobile" id="mobileNav">
+    <button class="nav__mobile-close" id="navClose">✕</button>
+    <a href="#home"         onclick="closeMob()">Home</a>
+    <a href="#about"        onclick="closeMob()">About</a>
+    <a href="#projects"     onclick="closeMob()">Projects</a>
+    <a href="#certificates" onclick="closeMob()">Certificates</a>
+    <a href="#contact"      onclick="closeMob()">Contact</a>
+  </div>
+
+  <!-- ================================================================
+       HERO / HOME
+  ================================================================ -->
+  <section id="home">
+    <div class="wrap">
+      <div class="hero__inner">
+
+        <!-- Left -->
+        <div class="hero__content">
+          <span class="hero__badge gs-up">✦ Welcome to my space</span>
+
+          <h1 class="hero__greeting gs-up">
+            Hi, I'm <span class="name">Loyola Janelle Liagoso</span>
+          </h1>
+
+          <p class="hero__sub gs-up">
+            An IT Student at <strong style="color:var(--text);">Davao del Norte State College</strong>, learning to build software and grow my skills one project at a time — with a growing interest in <strong style="color:var(--text);">Cybersecurity</strong>.
+          </p>
+
+          <div class="hero__btns gs-up">
+            <a href="#projects" class="btn-blue" id="hero-projects-btn">
+              <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+              View My Projects
+            </a>
+            <a href="#contact" class="btn-dark" id="hero-contact-btn">Get in Touch</a>
+          </div>
+        </div>
+
+        <!-- Photo -->
+        <div class="hero__photo gs-right">
+          <div class="hero__photo-ring">
+            <div class="hero__photo-inner">
+              <!--
+                ╔══════════════════════════════════════╗
+                ║  PROFILE PHOTO                       ║
+                ║  Replace "profile_placeholder.png"   ║
+                ║  with your own image filename.       ║
+                ╚══════════════════════════════════════╝
+              -->
+              <img
+                src="assets/profile.jpg"
+                alt="Profile Photo"
+                id="profilePhoto"
+              />
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       ABOUT
+  ================================================================ -->
+  <section id="about">
+    <div class="wrap">
+      <h2 class="sec-title gs-up">About</h2>
+
+      <div class="about__grid">
+
+        <div class="about__block gs-up">
+          <p class="about__block-title">Who I Am</p>
+          <p>
+            I'm an Information Technology student at <strong style="color:var(--text);">Davao del Norte State College (DNSC)</strong>,
+            still learning the ropes of software development. I enjoy working on hands-on class projects
+            and exploring topics like <strong style="color:var(--text);">Cybersecurity</strong>, building things
+            step by step as I grow my skills.
+          </p>
+        </div>
+
+        <div class="about__block gs-up">
+          <p class="about__block-title">What I'm Learning</p>
+          <ul class="about__skills-list">
+            <li>Cybersecurity & Network Security Fundamentals</li>
+            <li>Web Development & Authentication Systems</li>
+            <li>Data Mining — Apriori & Naïve Bayes Algorithms</li>
+            <li>UI/UX Design with Figma & Google Stitch</li>
+            <li>Database Design & Management</li>
+          </ul>
+        </div>
+
+        <div class="about__block gs-up" style="grid-column: 1 / -1;">
+          <p class="about__block-title">Tech Stack</p>
+          <div class="about__tech-tags">
+            <span class="tech-tag primary">Python</span>
+            <span class="tech-tag primary">HTML/CSS</span>
+            <span class="tech-tag primary">JavaScript</span>
+            <span class="tech-tag primary">Cybersecurity</span>
+            <span class="tech-tag">Network Security</span>
+            <span class="tech-tag">Pandas</span>
+            <span class="tech-tag">NumPy</span>
+            <span class="tech-tag">Figma</span>
+            <span class="tech-tag">Google Stitch</span>
+            <span class="tech-tag">Data Mining</span>
+            <span class="tech-tag">SQLite / MySQL</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       PROJECTS
+  ================================================================ -->
+  <section id="projects">
+    <div class="wrap">
+      <h2 class="sec-title gs-up">GitHub Projects</h2>
+
+      <div class="projects__grid">
+
+        <!-- Project 1 -->
+        <div class="proj-card gs-up" id="proj-auth">
+          <div class="proj-card__header">
+            <div>
+              <span class="proj-badge">School Project</span>
+              <h3 class="proj-card__title">Secure-Registration-and-Login-System</h3>
+            </div>
+            <svg class="proj-card__folder" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"/></svg>
+          </div>
+          <p class="proj-card__desc">
+            A registration and login system built to practice secure authentication — handling user sign-up, password protection, and session management the right way.
+          </p>
+          <div class="proj-card__footer">
+            <span class="proj-lang">
+              <span class="proj-lang__dot dot-python"></span>
+              Code
+            </span>
+            <a href="https://github.com/siomairicebles/Secure-Registration-and-Login-System" target="_blank" rel="noopener noreferrer" class="proj-link" id="proj1-repo-btn">
+              View Repository
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CERTIFICATES
+  ================================================================ -->
+  <section id="certificates">
+    <div class="wrap">
+      <h2 class="sec-title gs-up">Certificates</h2>
+
+      <div class="certs__grid">
+
+        <!-- Cert 1 -->
+        <div class="cert-card gs-up" id="cert-1">
+          <div class="cert-card__img">
+            <img src="assets/cert-servify.jpg" alt="Servify — Certificate of Participation, Level App 3.0" />
+          </div>
+          <div class="cert-card__body">
+            <h3 class="cert-card__title">Certificate of Participation — Servify (Level App 3.0)</h3>
+            <p class="cert-card__issuer">Davao del Norte State College — Institute of Computing</p>
+            <p class="cert-card__date">Issued: May 21, 2026</p>
+          </div>
+        </div>
+
+        <!-- Cert 2 -->
+        <div class="cert-card gs-up" id="cert-2">
+          <div class="cert-card__img">
+            <img src="assets/cert-ccna.png" alt="CCNA: Switching, Routing, and Wireless Essentials Certificate" />
+          </div>
+          <div class="cert-card__body">
+            <h3 class="cert-card__title">CCNA: Switching, Routing, and Wireless Essentials</h3>
+            <p class="cert-card__issuer">Davao del Norte State College — Cisco Networking Academy</p>
+            <p class="cert-card__date">Issued: December 1, 2025</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       CONTACT
+  ================================================================ -->
+  <section id="contact">
+    <div class="wrap">
+      <h2 class="sec-title gs-up">Contact</h2>
+
+      <div class="contact__grid gs-up">
+
+        <a href="https://github.com/siomairicebles" target="_blank" rel="noopener noreferrer" class="contact__card" id="contact-gh">
+          <div class="contact__card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.374 0 0 5.373 0 12c0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23A11.509 11.509 0 0 1 12 5.803c1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576C20.566 21.797 24 17.3 24 12c0-6.627-5.373-12-12-12z"/></svg>
+          </div>
+          <div class="contact__card-info">
+            <p class="contact__card-label">GitHub</p>
+            <p class="contact__card-value">siomairicebles</p>
+          </div>
+        </a>
+
+        <a href="mailto:janelleloyola26@gmail.com" class="contact__card contact__card--mail" id="contact-mail">
+          <div class="contact__card-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="contact__card-info">
+            <p class="contact__card-label">Email</p>
+            <p class="contact__card-value">janelleloyola26@gmail.com</p>
+          </div>
+        </a>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ================================================================
+       FOOTER
+  ================================================================ -->
+  <footer>
+    <div class="wrap">
+      <div class="footer__inner">
+        <p class="footer__copy">
+          &copy; <span id="yr"></span> Loyola Janelle Liagoso. DNSC. All rights reserved.
+        </p>
+        <a href="#home" class="footer__back">Back to Top ↑</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ================================================================
+       JAVASCRIPT
+  ================================================================ -->
+  <script>
+    /* Year */
+    document.getElementById('yr').textContent = new Date().getFullYear();
+
+    /* ── Theme toggle ──────────────────────────────────────── */
+    const root   = document.documentElement;
+    const toggle = document.getElementById('themeToggle');
+    let isDark   = true;
+
+    toggle.addEventListener('click', () => {
+      isDark = !isDark;
+      root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+      toggle.textContent = isDark ? '☀️' : '🌙';
+    });
+
+    /* ── Mobile nav ────────────────────────────────────────── */
+    document.getElementById('navHamburger').addEventListener('click', () => {
+      document.getElementById('mobileNav').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    });
+    function closeMob() {
+      document.getElementById('mobileNav').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.getElementById('navClose').addEventListener('click', closeMob);
+
+    /* ── Active nav link on scroll ─────────────────────────── */
+    const sections  = document.querySelectorAll('section[id]');
+    const navMap    = {
+      home: document.getElementById('nl-home'),
+      about: document.getElementById('nl-about'),
+      projects: document.getElementById('nl-projects'),
+      certificates: document.getElementById('nl-certs'),
+      contact: document.getElementById('nl-contact'),
+    };
+
+    new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          Object.values(navMap).forEach(a => a && a.classList.remove('active'));
+          if (navMap[e.target.id]) navMap[e.target.id].classList.add('active');
+        }
+      });
+    }, { rootMargin: '-35% 0px -60% 0px' }).observe && sections.forEach(s => {
+      new IntersectionObserver((entries) => {
+        entries.forEach(e => {
+          if (e.isIntersecting) {
+            Object.values(navMap).forEach(a => a && a.classList.remove('active'));
+            if (navMap[e.target.id]) navMap[e.target.id].classList.add('active');
+          }
+        });
+      }, { rootMargin: '-35% 0px -60% 0px' }).observe(s);
+    });
+
+    /* ── GSAP Animations ───────────────────────────────────── */
+    gsap.registerPlugin(ScrollTrigger);
+
+    /* Hero on load */
+    window.addEventListener('DOMContentLoaded', () => {
+      gsap.fromTo('#home .gs-up',
+        { opacity: 0, y: 28 },
+        { opacity: 1, y: 0, duration: 0.8, ease: 'power3.out', stagger: 0.15, delay: 0.1 }
+      );
+      gsap.fromTo('#home .gs-right',
+        { opacity: 0, x: 36 },
+        { opacity: 1, x: 0, duration: 0.9, ease: 'power3.out', delay: 0.2 }
+      );
+    });
+
+    /* Scroll reveals */
+    document.querySelectorAll('section:not(#home)').forEach(sec => {
+      ScrollTrigger.create({
+        trigger: sec,
+        start: 'top 84%',
+        once: true,
+        onEnter: () => {
+          gsap.fromTo(sec.querySelectorAll('.gs-up'),
+            { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.65, ease: 'power3.out', stagger: 0.1 }
+          );
+
+          /* Cards stagger */
+          const cards = sec.querySelectorAll('.proj-card, .cert-card, .contact__card, .about__block, .tech-tag');
+          if (cards.length) {
+            gsap.fromTo(cards,
+              { opacity: 0, y: 20 },
+              { opacity: 1, y: 0, duration: 0.55, ease: 'power2.out', stagger: 0.09, delay: 0.2 }
+            );
+          }
+        }
+      });
+    });
+  </script>
+
+</body>
+</html>
